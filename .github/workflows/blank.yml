@@ -1,0 +1,37 @@
+#include "DHT.h" // biblioteca do sensor DHT11
+#include <Adafruit_Sensor.h> //biblioteca adafruit, sensores
+#define DHTPIN A1 // atribui entrada analogica A0 para leituras do sensor
+#define DHTTYPE DHT11 // define o modelo do sensor como DHT 11
+ 
+DHT dht(DHTPIN, DHTTYPE); //atribui DHT sendo dht pino e tipo, conforme biblioteca
+ 
+void setup() 
+{
+  Serial.begin(9600);//comunicação do monitor serial (USB)
+  Serial.println(".'.MICELI WEATHER STATION.'.");// nome no monitor serial
+  Serial.print("\n");//pula linha
+  dht.begin();//inicia hardware do sensor temperatura e umidade
+  delay (1000);//define uma leitura por segundo (variável em milisegundos)
+}
+ 
+void loop() 
+{
+  float h = dht.readHumidity();//atribui como float a variável umidade
+  float t = dht.readTemperature();//idem para temperatura
+  if (isnan(t) || isnan(h)) //se erro na leitura
+  {
+    Serial.println("Falha ao acessar a leitura do sensor. Verifique HW");
+    delay (5000);//define um delay para nova leitura (variável em milisegundos)
+  } 
+  else
+  {
+    Serial.print("MICELI Umidade: ");
+    Serial.print(h);
+    Serial.print(" %");
+    Serial.print("\n");//pula linha
+    Serial.print("MICELI Temperatura: ");
+    Serial.print(t);
+    Serial.println(" °C");
+    delay (60000);//define uma leitura por minuto (variável em milisegundos)
+  }
+}
